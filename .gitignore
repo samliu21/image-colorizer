@@ -2,3 +2,6 @@ __pycache__
 .DS_Store
 dataset/
 old_images/
+people/
+flowers/
+rose/

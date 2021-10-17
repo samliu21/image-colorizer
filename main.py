@@ -1,58 +1,38 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+from skimage.color import rgb2lab
 
-import sys
 import os 
+import sys
 
 from model import model
 
-# Size of training images
-INPUT_SIZE = 100
+np.set_printoptions(suppress=True)
 
-DATASET_PATH = './dataset/images'
+INPUT_SIZE = 224
+
+DATASET_PATH = './flowers/images/'
 
 data_gen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
 
 DATA_SIZE = len(os.listdir(DATASET_PATH))
 
-# Generators for coloured and grayscale pictures respectively
 train_gen = data_gen.flow_from_directory(
-	'./dataset/', 
+	'./flowers/',
 	(INPUT_SIZE, INPUT_SIZE), 
 	class_mode=None,
-	batch_size=DATA_SIZE,
-	shuffle=False,
+	batch_size=13233,
+	shuffle=True,
 )
 
-train_gen_grayscale = data_gen.flow_from_directory(
-	'./dataset/', 
-	(INPUT_SIZE, INPUT_SIZE), 
-	color_mode = 'grayscale',
-	class_mode=None,
-	batch_size=DATA_SIZE,
-	shuffle=False,
-)
+X = tf.image.grayscale_to_rgb((tf.image.rgb_to_grayscale(train_gen[0]))) 
+Y = rgb2lab(train_gen[0])[:, :, :, 1:] / 128
 
-train = train_gen[0]
-train_grayscale = train_gen_grayscale[0]
+early_stopping = tf.keras.callbacks.EarlyStopping(patience=5)
 
-# plt.figure(figsize=(5, 5))
-# plt.subplot(1, 2, 1)
-# plt.imshow(train[0])
-# plt.subplot(1, 2, 2)
-# plt.imshow(train_grayscale[0], cmap='gray')
-# plt.show()
-
-print(np.max(train[1]))
-print(np.min(train[1]))
-print(np.mean(train[1]))
-print(train[1])
-
-# sys.exit()
-
-print(model.summary())
-
-model.fit(train_grayscale, train, epochs=5)
+model.summary()
+history = model.fit(X, Y, epochs=5, validation_split=0.2, callbacks=[early_stopping])
 
 model.save('saved_model')
+

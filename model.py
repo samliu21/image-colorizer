@@ -1,21 +1,25 @@
 import tensorflow as tf
 
-model = tf.keras.Sequential([
-	tf.keras.layers.InputLayer(input_shape=(None, None, 1)),
-	tf.keras.layers.UpSampling3D(size=(1, 1, 3)),
+inception = tf.keras.applications.vgg16.VGG16()
 
-	tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu'),
-	tf.keras.layers.Dropout(0.3),
-	
-	tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
-	tf.keras.layers.Dropout(0.3),
+model = tf.keras.Sequential()
 
-	tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
-	tf.keras.layers.Dropout(0.3),
+for layer in inception.layers:
+	if type(layer) == tf.keras.layers.Flatten:
+		break
+	model.add(layer)
+	layer.trainable = False
 
-	tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
-
-	tf.keras.layers.Conv2D(3, 3, padding='same', activation='relu'),
-])
+model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.Conv2DTranspose(16, (8, 8)))
+model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.UpSampling2D((2, 2)))
+model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.UpSampling2D((2, 2)))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.UpSampling2D((2, 2)))
+model.add(tf.keras.layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(tf.keras.layers.Conv2D(2, (3, 3), padding='same', activation='tanh'))
+model.add(tf.keras.layers.UpSampling2D((2, 2)))
 
 model.compile(optimizer='adam', loss='mse')

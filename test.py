@@ -2,41 +2,56 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import PIL
+from skimage.color import lab2rgb
+
+np.set_printoptions(suppress=True)
 
 import sys
 
+# model = tf.keras.models.load_model('model')
+# new_model = tf.keras.models.load_model('new_model')
 model = tf.keras.models.load_model('saved_model')
 
 def add_picture(url_path):
-	img_rgb = np.array(PIL.Image.open(url_path)) / 255.0
-	img = np.array(tf.image.rgb_to_grayscale(img_rgb))
-	img = img.reshape((1,) + img.shape)
-	print(img.shape)
+	img = np.array(PIL.Image.open(url_path)) / 255.0 
+	img = np.array(tf.image.resize(img, (224, 224)))
+	img = img.reshape((1,) + img.shape) 
 	return img
 
-img1, img2 = add_picture('test/0.jpg'), add_picture('test/test_picture2.jpg')
+img1, img2, img3 = add_picture('test/flower.jpeg'), add_picture('test/rose.jpeg'), add_picture('test/flower2.jpg')
 
-plt.figure(figsize=(5, 5))
-def plot(picture, loc, cmap=None):
-	plt.subplot(2, 2, loc)
-	if cmap:
-		plt.imshow(picture, cmap)
-	else:
-		plt.imshow(picture)
 
-res1 = model.predict(img1)[0]
-res2 = model.predict(img2)[0]
+plt.figure(figsize=(5, 6))
+def plot(matrix, loc):
+	ab = model.predict(matrix) * 128
 
-print(res1)
-print(np.mean(res1))
-print(np.max(res1))
-print(np.min(res1))
+	if loc == 0:
+		print(matrix)
+		print(ab)
+		print(np.max(ab), np.mean(ab), np.min(ab))
+		print(np.max(matrix), np.mean(matrix), np.min(matrix))
+		
+		# diff = np.abs(matrix[:, :, 0] - matrix[:, :, 1])
+		# print(np.max(diff), np.min(diff), np.mean(diff))
 
-plot(res1, 1)
-plot(img1[0], 2, 'gray')
-plot(res2, 3)
-plot(img2[0], 4, 'gray')
+		# plt.hist(ab[:, :, 1].flatten())
+		# plt.show()
 
-print()
+	image = np.zeros(ab.shape[1:3] + (3,))
+
+	matrix = matrix[0] 
+	image[:, :, :1] = matrix[:, :, :1] * 100
+	image[:, :, 1:] = ab
+	print(image)
+
+	plt.subplot(3, 2, 2 * loc + 1)
+	plt.imshow(lab2rgb(image))
+	plt.subplot(3, 2, 2 * loc + 2)
+	plt.imshow(matrix, cmap='gray')
+
+print(img1)
+plot(img1, 0)
+plot(img2, 1)
+plot(img3, 2)
 
 plt.show()
