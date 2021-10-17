@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage.color import rgb2lab
 
 import os 
@@ -12,17 +11,17 @@ np.set_printoptions(suppress=True)
 
 INPUT_SIZE = 224
 
-DATASET_PATH = './flowers/images/'
+DATASET_PATH = './landscapes/images/'
 
 data_gen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
 
 DATA_SIZE = len(os.listdir(DATASET_PATH))
 
 train_gen = data_gen.flow_from_directory(
-	'./flowers/',
+	'./landscapes/',
 	(INPUT_SIZE, INPUT_SIZE), 
 	class_mode=None,
-	batch_size=13233,
+	batch_size=6000,
 	shuffle=True,
 )
 
@@ -32,7 +31,6 @@ Y = rgb2lab(train_gen[0])[:, :, :, 1:] / 128
 early_stopping = tf.keras.callbacks.EarlyStopping(patience=5)
 
 model.summary()
-history = model.fit(X, Y, epochs=5, validation_split=0.2, callbacks=[early_stopping])
+history = model.fit(X, Y, epochs=10, validation_split=0.2, callbacks=[early_stopping])
 
 model.save('saved_model')
-
