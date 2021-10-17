@@ -2,9 +2,10 @@
 
 A deep convolutional neural network that adds colour to grayscale landscape images! 🌈
 
-Languages: Python, Tensorflow 🐍
+Languages: Tensorflow, Numpy, Matplotlib, Python 🐍
 
-<img src='example.png' style='height: 400px'>
+<img src='test/example.png' style='height: 400px'>
+<img src='test/example2.png' style='height: 400px'>
 
 ## Model
 The first half of the neural network consists of part of the famous VGG16 algorithm. Some of the later layers, which are used for classification, were removed. The latter half of the network is made of a series of 2D convolution, dropout, upsampling, and 2D convolution transpose layers. The model uses the Adam optimizer and the mean squared error loss function. It was trained over tens of thousands of landscape images.
@@ -12,6 +13,7 @@ The first half of the neural network consists of part of the famous VGG16 algori
 A summary of the neural network can be found below:
 
 ```
+Receives grayscale input images of size (224, 224, 3), where the R, G, and B values are the same.
 ______________________________________________________
 Layer                Output Shape              
 ______________________________________________________
@@ -31,3 +33,7 @@ Conv2D               (None, 112, 112, 2)
 UpSampling2D		     (None, 224, 224, 2)
 ______________________________________________________
 ```
+
+## Datasets
+- <a href='https://www.kaggle.com/arnaud58/landscape-pictures'>Dataset 1</a>
+- <a href='https://www.kaggle.com/theblackmamba31/landscape-image-colorization'>Dataset 2</a>

@@ -18,9 +18,9 @@ def add_picture(url_path):
 	return img
 
 URLS = [
-	'test/landscape9.jpg',
-	'test/landscape2.jpeg',
-	'test/landscape7.jpeg',
+	'test/landscape11.jpg',
+	'test/landscape12.jpg',
+	'test/landscape10.webp',
 ]
 
 sizes = list(map(lambda x: np.array(PIL.Image.open(x)).shape[:2], URLS))
