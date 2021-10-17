@@ -23,6 +23,9 @@ URLS = [
 	'test/landscape5.jpg',
 	'test/landscape3.jpg',
 ]
+
+sizes = list(map(lambda x: np.array(PIL.Image.open(x)).shape[:2], URLS))
+print(sizes)
 imgs = list(map(lambda x: add_picture(x), URLS))
 
 plt.figure(figsize=(5, 2 * len(imgs)))
@@ -38,15 +41,18 @@ def plot(matrix, loc):
 	# Second and third columns are AB values
 	image[:, :, :1] = matrix[:, :, :1] * 100
 	image[:, :, 1:] = ab
+	image = lab2rgb(image)
 
 	# RGB
 	plt.subplot(len(imgs), 2, 2 * loc + 1)
 	plt.axis('off')
-	plt.imshow(lab2rgb(image))
+	image = tf.image.resize(image, sizes[loc])
+	plt.imshow(image)
 
 	# Grayscale
 	plt.subplot(len(imgs), 2, 2 * loc + 2)
 	plt.axis('off')
+	matrix = tf.image.resize(matrix, sizes[loc])
 	plt.imshow(matrix, cmap='gray')
 
 for idx, img in enumerate(imgs):
