@@ -1,6 +1,6 @@
 # image-colorizer
 
-A deep convolutional neural network that adds colour to grayscale landscape images! 🌈
+A deep convolutional neural network that turns grayscale landscape images into coloured ones! 🌈
 
 Languages: Tensorflow, Numpy, Matplotlib, Python 🐍
 
@@ -8,7 +8,7 @@ Languages: Tensorflow, Numpy, Matplotlib, Python 🐍
 <img src='test/example2.png' style='height: 400px'>
 
 ## Model
-The first half of the neural network consists of part of the famous VGG16 algorithm. Some of the later layers, which are used for classification, were removed. The latter half of the network is made of a series of 2D convolution, dropout, upsampling, and 2D convolution transpose layers. The model uses the Adam optimizer and the mean squared error loss function. It was trained over tens of thousands of landscape images.
+The first part of the neural network uses the pretrained VGG16 network. The second part of the network is a series of 2D convolution, dropout, upsampling, and 2D convolution transpose layers. The model uses the Adam optimizer and the mean squared error loss function.
 
 A summary of the neural network can be found below:
 
