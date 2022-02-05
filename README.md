@@ -6,6 +6,11 @@ Languages: Tensorflow, Numpy, Matplotlib, Python 🐍
 
 <img src='test/example.png' style='height: 400px'>
 
+## Data
+The following Kaggle datasets were used:
+- <a href='https://www.kaggle.com/arnaud58/landscape-pictures'>Dataset 1</a>
+- <a href='https://www.kaggle.com/theblackmamba31/landscape-image-colorization'>Dataset 2</a>
+
 ## Model
 The first part of the neural network uses the pretrained VGG16 network. The second part of the network is a series of 2D convolution, dropout, upsampling, and 2D convolution transpose layers. The model uses the Adam optimizer and the mean squared error loss function.
 
@@ -83,7 +88,3 @@ Trainable params: 1,867,058
 Non-trainable params: 14,714,688
 _________________________________________________________________
 ```
-
-## Datasets
-- <a href='https://www.kaggle.com/arnaud58/landscape-pictures'>Dataset 1</a>
-- <a href='https://www.kaggle.com/theblackmamba31/landscape-image-colorization'>Dataset 2</a>
