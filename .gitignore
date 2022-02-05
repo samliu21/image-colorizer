@@ -2,3 +2,8 @@ __pycache__
 .DS_Store
 backups/
 landscapes*/
+lib
+bin
+include 
+share
+pyvenv.cfg
